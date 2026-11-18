@@ -1,0 +1,7 @@
+.DS_Store
+slprj/
+*.slxc
+*.asv
+*.log
+docs/LAB6_instrukcja.pdf
+docs/WYKŁAD_6_*.pdf
