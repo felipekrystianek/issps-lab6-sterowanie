@@ -20,6 +20,7 @@ src/
   build_control.m             skrypt, który od zera buduje quad_control.slx
   run_lab6.m                  symulacje zadań 1 i 2, wykresy i wyniki.json
   bodyDrag.m, xy_na_katy.m    kod bloków MATLAB Function
+OBRONA.md                     jak pokazać model na zajęciach, wyniki i typowe pytania z odpowiedziami
 ```
 
 ## Jak używać modelu
