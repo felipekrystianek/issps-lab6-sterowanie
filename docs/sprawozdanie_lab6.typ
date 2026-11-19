@@ -1,5 +1,5 @@
 // Sprawozdanie: ISSPS ćw. 6 - podstawy sterowania czterowirnikowego BSP (MATLAB/Simulink, Aerospace Blockset)
-// Kompilacja: typst compile sprawozdanie_lab6.typ ISSPS_LAB6_sekcja2_Filipek_Michalik_Kozlowski_Augustowski.pdf
+// Kompilacja: typst compile sprawozdanie_lab6.typ ISSPS_LAB6_sekcja2_Filipek_Michalik_Augustowski.pdf
 // Wszystkie liczby czytane z wyniki.json (generuje src/run_lab6.m)
 
 #let r = json("wyniki.json")
@@ -18,7 +18,7 @@
 #let bl(a, b) = { let e = calc.abs(blad(a, b)); if e < 0.001 { "< 0,001" } else { f(e, 3) } }
 
 // ---------- Styl (wg SZABLON_SPRAWOZDANIA.doc) ----------
-#set document(title: "Sprawozdanie - ćwiczenie 6", author: ("Krystian Filipek", "Paweł Michalik", "Wiktor Kozłowski", "Artur Augustowski"))
+#set document(title: "Sprawozdanie - ćwiczenie 6", author: ("Krystian Filipek", "Paweł Michalik", "Artur Augustowski"))
 #set page(
   paper: "a4",
   margin: (x: 2.5cm, top: 2.5cm, bottom: 2.5cm),
@@ -79,7 +79,7 @@
       v(0.3em)
       text(size: 11pt)[Podstawy sterowania wielowirnikowych bezzałogowych statków powietrznych]
       v(2.4em)
-      text(size: 11pt)[SEKCJA LAB 2: Krystian Filipek, Paweł Michalik, Wiktor Kozłowski, Artur Augustowski]
+      text(size: 11pt)[SEKCJA LAB 2: Krystian Filipek, Paweł Michalik, Artur Augustowski]
       v(2em)
       text(size: 11pt)[Data wykonania ćwiczenia: 30.11.2026]
       v(0.8em)
