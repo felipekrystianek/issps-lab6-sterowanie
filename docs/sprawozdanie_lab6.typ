@@ -113,7 +113,7 @@ Celem ćwiczenia jest nabycie podstawowych umiejętności w zakresie modelowania
 
 == Zadanie nr 1
 
-Do sterowania wykorzystano model BSP z ćwiczenia 5 (bloki Multirotor DJIF450Rotors w konfiguracji _Quadcopter +_ i 6DOF (Quaternion), ciężar, opór bodyDrag i wiatr). Stałą prędkość wirników RotorSpeed zastąpiono układem sterowania jak na wykładzie (rys. 1). Parametry modelu (tab. 1) wpisano jako zmienne w Model Workspace, więc plik `quad_control.slx` działa bez dodatkowych skryptów.
+Do sterowania wykorzystano model BSP z ćwiczenia 5 (bloki Multirotor DJIF450Rotors w konfiguracji _Quadcopter +_ i 6DOF (Quaternion), ciężar, opór bodyDrag i wiatr). Stałą prędkość wirników RotorSpeed zastąpiono układem sterowania jak na wykładzie (rys. 1). Model jest sparametryzowany: w parametrach bloków zamiast liczb wpisano nazwy zmiennych (np. `m`, `I`, `CDxS`, `rho`), a ich wartości (tab. 1) przypisuje plik `parametry.m` w workspace MATLAB-a. Model wczytuje ten plik automatycznie przy otwarciu.
 
 Układ sterowania ma cztery regulatory PID: wysokości (PID1), kąta roll (PID2), kąta pitch (PID3) i prędkości obrotu yaw (PID4). Uchyb wysokości $e_z = z_"ref" - z$ daje dodatkowy ciąg $Delta T$, ograniczony do $plus.minus 0","5 m g$, który dodaje się do ciężaru: $Sigma T = m g + Delta T$. Regulatory kątów dają momenty $tau_phi$, $tau_theta$, $tau_psi$. Mikser wylicza z nich kwadraty prędkości wirników $bold(Omega)^2 = bold(A)^(-1) [Sigma T, tau_phi, tau_theta, tau_psi]^T$ (macierz $bold(A)^(-1)$ jak na wykładzie). Po pierwiastku ze znakiem i ograniczeniu do 0-1000 rad/s nadawane są kierunki obrotu $[1, -1, 1, -1]$.
 

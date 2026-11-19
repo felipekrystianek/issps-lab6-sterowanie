@@ -4,7 +4,7 @@ Ustalone 18.11.2026. Kolejność: LAB6 (termin sekcja lab. 2: 30.11) → projekt
 
 ## Wspólne
 - Baza: `../LAB5_Quadrocopter/src/quad_model.slx` (Multirotor DJIF450Rotors „+” + 6DOF Quaternion + grawitacja + bodyDrag + Wind). LAB5 zostaje bez zmian i służy jako REF dynamiki.
-- Parametry jako zmienne w Model Workspace (wykład 6, slajd 35): CT, CQ, H, I, InitialPosition, R, d, g, m, rho, CDxS. Plik .slx działa sam, bez skryptów.
+- Parametry jako zmienne w workspace MATLAB-a, wartości w plikach .m (LAB6: `parametry.m`, projekt: `parametry_REF.m`, `parametry_P2.m`); model wczytuje je sam przy otwarciu (uwaga profesora 19.11).
 - Struktura sterowania jak na slajdzie 32: PID z (+ m·g), PID roll, pitch i yaw → Mux → A^-1 (slajd 36) → ±sqrt(|u|) → Saturation → Gain [1 -1 1 -1] → Ω.
 - Wartości zadane: przełącznik między suwakami (jak na wykładzie: z przez Slider Gain → 1/s, kąty pi/8, pi/8, pi/12 × Slider) a skokami (Step) do sprawozdania.
 - Nastawy PID (wykład 6, slajdy 26 i 38–40), N = 10:

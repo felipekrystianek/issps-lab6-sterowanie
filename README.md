@@ -15,7 +15,8 @@ docs/
   wyniki.json                 wskaźniki z symulacji, które wczytuje sprawozdanie
   img/                        wykresy i zrzut modelu
 src/
-  quad_control.slx            model Simulink (właściwe rozwiązanie, działa bez skryptów)
+  quad_control.slx            model Simulink (przy otwarciu sam wczytuje parametry.m)
+  parametry.m                 parametry modelu i wartości zadane (workspace)
   build_control.m             skrypt, który od zera buduje quad_control.slx
   run_lab6.m                  symulacje zadań 1 i 2, wykresy i wyniki.json
   bodyDrag.m, xy_na_katy.m    kod bloków MATLAB Function
@@ -23,7 +24,7 @@ src/
 
 ## Jak używać modelu
 
-Parametry są zmiennymi w Model Workspace (Modeling → Model Explorer → Model Workspace). Najważniejsza jest `tryb`:
+Model jest sparametryzowany: w blokach są nazwy zmiennych, a wartości ustawia plik `src/parametry.m` w workspace MATLAB-a (wczytuje się sam przy otwarciu modelu). Zmienne zmieniasz w Command Window, np. `z_cel = 12`, i klikasz Run; `parametry` przywraca wartości domyślne. Najważniejsza jest `tryb`:
 
 - `tryb = 1` - skoki: ustaw `z_cel`, `phi_cel`, `theta_cel` [rad], `r_cel` [rad/s] (skok w chwili `t_skok`),
 - `tryb = 2` - suwaki jak na wykładzie (suwak z, suwak phi, suwak theta, suwak r),

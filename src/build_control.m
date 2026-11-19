@@ -1,20 +1,15 @@
 % Buduje quad_control.slx - model BSP z LAB5 + system sterowania z wykladu 6 (slajd 32)
-% Parametry sa zmiennymi w Model Workspace (slajd 35), wiec .slx dziala sam, bez skryptow.
+% Parametry sa w pliku parametry.m (workspace MATLAB-a), model wczytuje go sam przy otwarciu.
 here = fileparts(mfilename('fullpath')); cd(here);
 mdl = 'quad_control';
 if bdIsLoaded(mdl), close_system(mdl, 0); end
 if exist([mdl '.slx'], 'file'), delete([mdl '.slx']); end
 new_system(mdl); load_system('aerolibrotordyn'); load_system('aerolib6dof2');
 
-%% Parametry w Model Workspace (konfiguracja referencyjna, tab. 1 instrukcji)
-ws = get_param(mdl, 'ModelWorkspace');
-v = {'CT', 0.0142; 'CQ', 0.00206; 'H', -0.035; 'R', 0.127; 'd', 0.225; 'rho', 1.225; ...
-     'g', [0; 0; 9.81]; 'm', 1.5; 'I', diag([0.0111 0.0070 0.0080]); ...
-     'CDxS', [0.0390 0.0455 0.0900]; 'InitialPosition', [0 0 -10]; ...
-     'Wind', [0 0 0]; 'Gust', [0 0 0]; 't_gust', 20; 'Wmax', 1000; ...
-     'tryb', 1; 't_skok', 1; 'z_cel', 15; 'phi_cel', 0; 'theta_cel', 0; 'r_cel', 0; ...
-     'x_cel', 0; 'y_cel', 0; 'psi_cel', 0; 'v_xy', 0.5};
-for i = 1:size(v, 1), ws.assignin(v{i, 1}, v{i, 2}); end
+%% Parametry: bloki maja nazwy zmiennych, a wartosci sa w workspace (parametry.m)
+parametry;
+% przy otwarciu modelu parametry wczytuja sie same, chyba ze sa juz w workspace
+set_param(mdl, 'PreLoadFcn', 'if ~exist(''CT'', ''var''), parametry; end');
 
 %% Model BSP (jak w LAB5, tylko z nazwami zmiennych zamiast liczb)
 dof = '6DOF (Quaternion)';

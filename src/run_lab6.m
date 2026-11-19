@@ -1,9 +1,11 @@
 % Symulacje do sprawozdania z LAB6: wykresy do ../docs/img i wskazniki do ../docs/wyniki.json
 % Wymaga quad_control.slx (jesli go nie ma, buduje go build_control.m)
+function run_lab6
 here = fileparts(mfilename('fullpath')); cd(here);
 img = fullfile(here, '..', 'docs', 'img'); if ~exist(img, 'dir'), mkdir(img); end
 mdl = 'quad_control';
 if ~exist([mdl '.slx'], 'file'), build_control; end
+evalin('base', 'parametry');   % model czyta parametry z workspace
 load_system(mdl);
 R = struct();
 
@@ -76,11 +78,13 @@ fid = fopen(fullfile(here, '..', 'docs', 'wyniki.json'), 'w');
 fprintf(fid, '%s', jsonencode(R, 'PrettyPrint', true)); fclose(fid);
 disp(jsonencode(R, 'PrettyPrint', true));
 
+end
+
 %% Funkcje pomocnicze
 function o = symuluj(mdl, a, T)
-% ustawia zmienne w Model Workspace i puszcza symulacje
+% ustawia zmienne (na czas symulacji) i puszcza symulacje
 in = Simulink.SimulationInput(mdl);
-for j = 1:2:numel(a), in = in.setVariable(a{j}, a{j + 1}, 'Workspace', mdl); end
+for j = 1:2:numel(a), in = in.setVariable(a{j}, a{j + 1}); end
 o = sim(in.setModelParameter('StopTime', num2str(T)));
 end
 
