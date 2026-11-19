@@ -124,6 +124,22 @@ Wprowadzono trzy uzupełnienia, bez których układ nie działał poprawnie:
 
 Wartości zadane wybiera zmienna `tryb`: 1 - skoki (Step), 2 - suwaki (Slider Gain) jak na wykładzie, 3 - punkt docelowy z zadania 2.
 
+=== Budowa układu sterowania krok po kroku
+
+Punktem wyjścia był model `quad_model.slx` z ćwiczenia 5. Wykonano w nim kolejno następujące zmiany:
+
++ *Parametryzacja.* W parametrach bloków liczby zastąpiono nazwami zmiennych: w DJIF450Rotors Arm length = `d`, Height = `H`, $C_T$ = `CT`, $C_Q$ = `CQ`, Radius = `R`; w 6DOF (Quaternion) Initial position = `InitialPosition`, Initial mass = `m`, Inertia = `I`; w blokach Constant AirDensity = `rho`, Gravity = `g`, CDxS = `CDxS`, Wind = `Wind`. Wartości przypisuje plik `parametry.m` w workspace MATLAB-a, a model uruchamia go sam przy otwarciu i przed symulacją (callbacki PostLoadFcn i InitFcn w Model Properties).
++ *Usunięcie stałej prędkości wirników.* Usunięto blok Constant RotorSpeed. Wejście $Omega$ bloku DJIF450Rotors podłączono do wyjścia układu sterowania (punkt 6).
++ *Pomiary.* Wyjście $X_e$ bloku 6DOF podłączono do bloku Gain [1 1 -1] i bloku Demux (3 wyjścia), co daje $x$, $y$ i wysokość $h = -Z_e$. Wyjście $phi theta psi$ rozdzielono blokiem Demux na trzy kąty, a wyjście $omega_b$ drugim blokiem Demux, z którego bierze się prędkość obrotu yaw $r$.
++ *Wartości zadane.* Dla każdego kanału (z, phi, theta, r) dodano blok Step (skok w chwili `t_skok` do wartości `z_cel`, `phi_cel`, `theta_cel`, `r_cel`) oraz suwak jak na wykładzie: Constant 1 → Slider Gain → Integrator 1/s dla wysokości oraz Constant $pi \/ 8$, $pi \/ 8$, $pi \/ 12$ → Slider Gain dla roll, pitch i prędkości yaw. Sygnały trafiają do bloków Multiport Switch (z_ref, phi_ref, theta_ref, r_ref), sterowanych blokiem Constant `tryb`.
++ *Pętle regulacji.* Dla każdego kanału dodano blok Sum (+ -), który liczy uchyb (wartość zadana minus pomiar), i blok PID Controller (Continuous, forma Parallel) z nastawami z tab. 2. Za PID1 dodano blok Saturation (limit dT, $plus.minus 0","5 m g$) i blok Sum z blokiem Constant `m*g(3)` (ciąg zawisu). Za PID2 i PID3 dodano bloki Gain -1.
++ *Mikser.* Wyjścia czterech pętli połączono blokiem Mux (4 wejścia) z blokiem Gain A^{-1} (Multiplication: Matrix(K\*u), macierz $bold(A)^(-1)$ jak na wykładzie). Dalej są: blok Sqrt w trybie signedSqrt (pierwiastek ze znakiem), blok Saturation (0-`Wmax`) i blok Gain [1 -1 1 -1] (kierunki obrotu), którego wyjście trafia na wejście $Omega$ bloku DJIF450Rotors.
++ *Wiatr z podmuchem.* Do bloku Constant Wind dodano dwa bloki Step (Podmuch start w chwili `t_gust` o wartości `Gust` i Podmuch koniec w chwili `t_gust` + 2 s o wartości `-Gust`) i blok Sum, którego wyjście trafia do bloku Matrix Multiply przed bodyDrag.
++ *Podgląd i zapis.* Dla wysokości, roll, pitch, prędkości yaw, kąta yaw i położenia dodano bloki Mux i Scope (wartość zadana i rzeczywista na jednym wykresie). Sygnały do wykresów w sprawozdaniu zapisywano przez Signal Logging.
++ *Ustawienia symulacji.* Solver ode45, maksymalny krok 0,01 s, tolerancja względna $10^(-6)$.
+
+Bloki dodane do zadania 2 opisano w podrozdziale Zadanie nr 2.
+
 #figure(image("img/model.png", width: 100%), caption: [Model BSP z układem sterowania w MATLAB/Simulink (`quad_control.slx`)])
 
 #figure(
@@ -155,6 +171,17 @@ Wartości zadane wybiera zmienna `tryb`: 1 - skoki (Step), 2 - suwaki (Slider Ga
 
 Działanie układu sprawdzono w warunkach idealnych (bez wiatru), osobno dla każdego kanału: skok wysokości z 10 do 15 m, skok kąta roll i pitch o $pi \/ 8$ = 22,5° oraz skok prędkości yaw o $pi \/ 12$ rad/s. Skok następuje w chwili 1 s, a w pozostałych kanałach wartości zadane są zerowe, a wysokość wynosi 10 m.
 
+#figure(
+  table(columns: (auto, 1fr, auto, auto),
+    table.header([Badanie], [Ustawione zmienne], [Czas symulacji], [Odczyt]),
+    [skok wysokości], [`tryb` = 1, `z_cel` = 15], [20 s], [Scope z],
+    [skok roll], [`tryb` = 1, `z_cel` = 10, `phi_cel` = pi/8], [20 s], [Scope phi],
+    [skok pitch], [`tryb` = 1, `z_cel` = 10, `theta_cel` = pi/8], [20 s], [Scope theta],
+    [skok prędkości yaw], [`tryb` = 1, `z_cel` = 10, `r_cel` = pi/12], [20 s], [Scope r, Scope psi],
+  ),
+  caption: [Ustawienia modelu w badaniach zadania 1 (pozostałe zmienne jak w `parametry.m`, skok w chwili `t_skok` = 1 s)],
+)
+
 #figure(image("img/z1_wysokosc.png", width: 75%), caption: [Odpowiedź na skok wysokości])
 
 #figure(image("img/z1_roll.png", width: 75%), caption: [Odpowiedź na skok kąta roll])
@@ -178,7 +205,15 @@ Wszystkie kanały osiągają wartość zadaną z pomijalnym uchybem. Wysokość 
 
 == Zadanie nr 2
 
-Do układu z zadania 1 dodano zewnętrzne pętle położenia (dolna część rys. 1). Uchyby położenia $x$ i $y$ trafiają do regulatorów PID X i PID Y, a funkcja `xy_na_katy` obraca ich wyjścia o kąt $psi$ do układu BSP i zamienia na zadane kąty: $theta_"ref" = -u_x^b$ (lot do przodu to pochylenie nosa w dół) oraz $phi_"ref" = u_y^b$. Oba kąty są ograniczone do $plus.minus pi \/ 8$. Kąt yaw reguluje człon P ($K_psi$ = 1), który zadaje prędkość $r_"ref"$ ograniczoną do $plus.minus pi \/ 12$ rad/s. Wysokość zadaje się bezpośrednio w pętli PID1. Położenie zadane $x$, $y$ zmienia się rampą 0,5 m/s, a nie skokiem, bo przy skoku człon I regulatorów położenia narastał podczas przelotu i dawał przeregulowanie ok. 1-2 m.
+Do układu z zadania 1 dodano zewnętrzne pętle położenia (dolna część rys. 1):
+
++ bloki Step x skok i y skok (wartości `x_cel`, `y_cel`) oraz bloki Rate Limiter (rampa x, rampa y, prędkość zmian $plus.minus$`v_xy`),
++ bloki Sum ex i ey (uchyb położenia: rampa minus $x$ lub $y$ z bloku Demux XYZ) i bloki PID Controller (PID X, PID Y),
++ blok MATLAB Function XY na katy (funkcja `xy_na_katy`, wejścia: wyjścia PID X i PID Y oraz kąt $psi$), którego wyjścia $phi_"ref"$ i $theta_"ref"$ podłączono do trzecich wejść danych bloków Multiport Switch phi_ref i theta_ref,
++ blok Step psi skok (`psi_cel`), blok Sum e_psi (uchyb kąta yaw), blok Gain K psi i blok Saturation limit r ($plus.minus pi \/ 12$ rad/s), którego wyjście podłączono do trzeciego wejścia danych bloku Multiport Switch r_ref,
++ bloki Mux i Scope XY oraz Scope psi do podglądu położenia i kąta yaw.
+
+Przy `tryb` = 3 wysokość zadaje blok z skok, kąty roll i pitch - regulator położenia, a prędkość yaw - regulator kąta yaw. Uchyby położenia $x$ i $y$ trafiają do regulatorów PID X i PID Y, a funkcja `xy_na_katy` obraca ich wyjścia o kąt $psi$ do układu BSP i zamienia na zadane kąty: $theta_"ref" = -u_x^b$ (lot do przodu to pochylenie nosa w dół) oraz $phi_"ref" = u_y^b$. Oba kąty są ograniczone do $plus.minus pi \/ 8$. Kąt yaw reguluje człon P ($K_psi$ = 1), który zadaje prędkość $r_"ref"$ ograniczoną do $plus.minus pi \/ 12$ rad/s. Wysokość zadaje się bezpośrednio w pętli PID1. Położenie zadane $x$, $y$ zmienia się rampą 0,5 m/s, a nie skokiem, bo przy skoku człon I regulatorów położenia narastał podczas przelotu i dawał przeregulowanie ok. 1-2 m.
 
 Pętla położenia musi być wolniejsza od pętli roll, która z nastawami z wykładu ustala się dopiero po ok. 2-3 s, dlatego nastawy PID X i PID Y są małe. Człon I usuwa uchyb ustalony przy wietrze, a człon D tłumi oscylacje.
 
@@ -192,6 +227,15 @@ Pętla położenia musi być wolniejsza od pętli roll, która z nastawami z wyk
 )
 
 Badano lot z punktu (0, 0, 10) m do punktu (5, 5, 15) m z jednoczesnym obrotem do $psi$ = 45°, w warunkach idealnych oraz przy umiarkowanym wietrze: stały wiatr 5 m/s wzdłuż osi $x$ i podmuch +3 m/s w chwili 30-32 s.
+
+#figure(
+  table(columns: (auto, 1fr, auto),
+    table.header([Badanie], [Ustawione zmienne], [Czas symulacji]),
+    [warunki idealne], [`tryb` = 3, `x_cel` = 5, `y_cel` = 5, `z_cel` = 15, `psi_cel` = pi/4], [50 s],
+    [umiarkowany wiatr], [jak wyżej oraz `Wind` = [5 0 0], `Gust` = [3 0 0], `t_gust` = 30], [50 s],
+  ),
+  caption: [Ustawienia modelu w badaniach zadania 2 (odczyt: Scope XY, Scope z, Scope psi)],
+)
 
 #figure(image("img/z2_bez_wiatru.png", width: 90%), caption: [Lot do punktu docelowego - warunki idealne])
 
