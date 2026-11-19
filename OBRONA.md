@@ -13,7 +13,7 @@
 
 ### Co oddajemy
 
-Sprawozdanie (`docs/ISSPS_LAB6_sekcja2_Filipek_Michalik_Augustowski.pdf` albo `.docx`), model `src/quad_control.slx` i plik z parametrami `src/parametry.m`.
+Sprawozdanie (`docs/ISSPS_LAB6_sekcja2_Filipek_Michalik_Kozlowski_Augustowski.pdf` albo `.docx`), model `src/quad_control.slx` i plik z parametrami `src/parametry.m`.
 
 ### Jak czytać schemat (od lewej)
 

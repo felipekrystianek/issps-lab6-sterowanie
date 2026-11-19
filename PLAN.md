@@ -22,7 +22,7 @@ Ustalone 18.11.2026. Kolejność: LAB6 (termin sekcja lab. 2: 30.11) → projekt
 - Zad. 1: skoki z 10 → 15 m, roll pi/8, pitch pi/8, yaw pi/12 (warunki idealne).
 - Zad. 2: start (0, 0, 10) → cel (5, 5, 15) m, yaw pi/4. Raz bez wiatru, raz z wiatrem stałym 5 m/s i podmuchem +3 m/s przez 2 s.
 - Wykresy: wartość zadana i rzeczywista, opisy osi, jednostki, legenda. Wskaźniki: uchyb ustalony, czas ustalania, przeregulowanie.
-- Sprawozdanie w Typst (szablon jak LAB5), PDF: `ISSPS_LAB6_sekcja2_Filipek_Michalik_Augustowski.pdf`.
+- Sprawozdanie w Typst (szablon jak LAB5), PDF: `ISSPS_LAB6_sekcja2_Filipek_Michalik_Kozlowski_Augustowski.pdf`.
 
 ## Projekt_BSP/: `src/quad_P2.slx` (jeden model z przełącznikiem: stałe RotorSpeed albo PID)
 - P2: m = 1.65 kg, J = diag(0.0114, 0.0073, 0.0083), CDxS = [0.0390 0.0455 0.0900].
