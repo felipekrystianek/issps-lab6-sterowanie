@@ -16,7 +16,7 @@ Ustalone 18.11.2026. Kolejność: LAB6 (termin sekcja lab. 2: 30.11) → projekt
   | pitch | 0.0038 | 9.97e-5 | 0.026 |
   | yaw | 0.020 | 0.0093 | 0.0014 |
 
-- Pętle położenia X i Y (LAB6 zad. 2) dają zadany pitch i roll (z obrotem o yaw). Nastawy dobieramy sami, bo na wykładzie ich nie ma.
+- Pętle położenia X i Y (LAB6 zad. 2) dają zadany pitch i roll (z obrotem o yaw).
 
 ## LAB6_Sterowanie/: `src/quad_control.slx`, parametry REF
 - Zad. 1: skoki z 10 → 15 m, roll pi/8, pitch pi/8, yaw pi/12 (warunki idealne).

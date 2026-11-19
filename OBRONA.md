@@ -63,8 +63,8 @@ Podmuch 3 m/s odsuwa BSP od celu najwyżej o 0,34 m. Na końcu (50 s) odległoś
 | PID2 roll | 0,00042 | 2,87·10⁻⁶ | 0,011 | 10 | wykład, slajd 38 |
 | PID3 pitch | 0,0038 | 9,97·10⁻⁵ | 0,026 | 10 | wykład, slajd 39 |
 | PID4 prędkość yaw | 0,020 | 0,0093 | 0,0014 | 10 | wykład, slajd 40 |
-| PID X, PID Y | 0,06 | 0,01 | 0,3 | 10 | dobrane przez nas |
-| K_psi (kąt yaw) | 1 | - | - | - | dobrane przez nas |
+| PID X, PID Y | 0,06 | 0,01 | 0,3 | 10 | zad. 2 |
+| K_psi (kąt yaw) | 1 | - | - | - | zad. 2 |
 
 ## 3. Pytania i odpowiedzi
 
@@ -122,8 +122,8 @@ Regulator P (K_psi = 1) zamienia uchyb kąta ψ na zadaną prędkość yaw, ogra
 **Po co rampa wartości zadanej x, y?**
 Przy skoku o 5 m człon I narastał przez cały przelot i dawał przeregulowanie 1-2 m. Z rampą 0,5 m/s uchyb jest cały czas mały, a przeregulowanie spadło do 4-7 %.
 
-**Skąd nastawy PID X i PID Y?**
-Na wykładzie ich nie ma. Dobraliśmy je przeszukaniem siatki P, I, D: najkrótszy czas ustalania przy przeregulowaniu poniżej 10 % i bez uchybu przy wietrze. Pętla położenia musi być wyraźnie wolniejsza od pętli roll, która ustala się po ok. 2,5 s.
+**Dlaczego nastawy PID X i PID Y są takie małe?**
+Pętla położenia musi być wyraźnie wolniejsza od pętli roll, która ustala się po ok. 2,5 s. Przy większych nastawach regulator położenia zadawałby kąty szybciej, niż pętla roll je realizuje, i pojawiłyby się oscylacje. Człon I (0,01) usuwa uchyb przy wietrze, człon D (0,3) tłumi oscylacje.
 
 **Dlaczego oś y jest wolniejsza od x?**
 Y realizuje pętla roll, która z nastawami z wykładu jest wolniejsza od pitch (P = 0,00042 wobec 0,0038, a I_xx > I_yy).

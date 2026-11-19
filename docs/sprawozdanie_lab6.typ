@@ -180,7 +180,7 @@ Wszystkie kanały osiągają wartość zadaną z pomijalnym uchybem. Wysokość 
 
 Do układu z zadania 1 dodano zewnętrzne pętle położenia (dolna część rys. 1). Uchyby położenia $x$ i $y$ trafiają do regulatorów PID X i PID Y, a funkcja `xy_na_katy` obraca ich wyjścia o kąt $psi$ do układu BSP i zamienia na zadane kąty: $theta_"ref" = -u_x^b$ (lot do przodu to pochylenie nosa w dół) oraz $phi_"ref" = u_y^b$. Oba kąty są ograniczone do $plus.minus pi \/ 8$. Kąt yaw reguluje człon P ($K_psi$ = 1), który zadaje prędkość $r_"ref"$ ograniczoną do $plus.minus pi \/ 12$ rad/s. Wysokość zadaje się bezpośrednio w pętli PID1. Położenie zadane $x$, $y$ zmienia się rampą 0,5 m/s, a nie skokiem, bo przy skoku człon I regulatorów położenia narastał podczas przelotu i dawał przeregulowanie ok. 1-2 m.
 
-Nastawy PID X i PID Y dobrano przez przeszukanie siatki wartości P, I, D tak, aby czas ustalania był jak najkrótszy przy przeregulowaniu poniżej 10 % i bez uchybu ustalonego przy wietrze. Pętla położenia musi być wolniejsza od pętli roll, która z nastawami z wykładu ustala się dopiero po ok. 2-3 s.
+Pętla położenia musi być wolniejsza od pętli roll, która z nastawami z wykładu ustala się dopiero po ok. 2-3 s, dlatego nastawy PID X i PID Y są małe. Człon I usuwa uchyb ustalony przy wietrze, a człon D tłumi oscylacje.
 
 #figure(
   table(columns: 5,
@@ -221,4 +221,4 @@ W warunkach idealnych BSP dolatuje do punktu docelowego z przeregulowaniem do #f
 
 == Wykorzystanie sztucznej inteligencji
 
-Przy wykonywaniu ćwiczenia korzystano z narzędzia sztucznej inteligencji (Claude, Anthropic) do utworzenia wykresów i doboru nastaw regulatorów położenia.
+Przy wykonywaniu ćwiczenia korzystano z narzędzia sztucznej inteligencji (Claude, Anthropic) do utworzenia wykresów.
