@@ -8,8 +8,10 @@ new_system(mdl); load_system('aerolibrotordyn'); load_system('aerolib6dof2');
 
 %% Parametry: bloki maja nazwy zmiennych, a wartosci sa w workspace (parametry.m)
 parametry;
-% przy otwarciu modelu parametry wczytuja sie same, chyba ze sa juz w workspace
-set_param(mdl, 'PreLoadFcn', 'if ~exist(''CT'', ''var''), parametry; end');
+% przy otwarciu modelu i przed kazda symulacja: jesli w workspace nie ma parametrow LAB6, wczytaj parametry.m
+% (pelna sciezka, wiec dziala niezaleznie od biezacego folderu; konfiguracja = 'LAB6' oznacza parametry LAB6)
+cb = ['if ~exist(''konfiguracja'', ''var'') || ~strcmp(konfiguracja, ''LAB6''), run(fullfile(fileparts(get_param(''' mdl ''', ''FileName'')), ''parametry.m'')); end'];
+set_param(mdl, 'PostLoadFcn', cb, 'InitFcn', cb);
 
 %% Model BSP (jak w LAB5, tylko z nazwami zmiennych zamiast liczb)
 dof = '6DOF (Quaternion)';

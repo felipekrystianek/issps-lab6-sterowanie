@@ -1,5 +1,6 @@
 %% parametry.m - parametry modelu quad_control.slx (tab. 1 instrukcji LAB6)
 % Model czyta te zmienne z workspace. Po zmianie wartosci wystarczy kliknac Run.
+konfiguracja = 'LAB6';
 
 % BSP i otoczenie
 m    = 1.5;                               % masa [kg]
