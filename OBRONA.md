@@ -4,11 +4,16 @@
 
 ## 1. Pokaz modelu krok po kroku
 
-1. W MATLAB-ie przejdź do `LAB6_Sterowanie/src` i otwórz `quad_control.slx`. Model sam uruchamia `parametry.m`, więc w oknie **Workspace** są wszystkie parametry.
+1. W MATLAB-ie otwórz `LAB6_Sterowanie/src/quad_control.slx` (bieżący folder nie ma znaczenia). Model sam uruchamia `parametry.m` przy otwarciu i przed każdym Run, jeśli parametrów LAB6 nie ma w workspace, więc w oknie **Workspace** są wszystkie parametry.
 2. Wartości zmieniasz w Command Window (np. `z_cel = 12`) albo dwuklikiem w oknie Workspace, potem klikasz **Run**. Wpisanie `parametry` przywraca wartości domyślne.
 3. Czas symulacji ustawiasz w polu **Stop Time**.
 4. Przebiegi pokazują Scope'y: z, phi, theta, r, psi, XY (zawsze wartość zadana i rzeczywista). Pozostałe sygnały (oznaczone anteną) są w **Data Inspector**: `Xe`, `Ve`, `eul`, `wb`, `Omega`.
 5. Model jest sparametryzowany: w blokach są nazwy zmiennych (np. dwuklik na 6DOF: *Initial mass* = `m`, *Inertia* = `I`; na DJIF450Rotors: `d`, `H`, `CT`, `CQ`, `R`), a liczby są w workspace.
+6. Jeśli bloki świecą na czerwono (brak zmiennej), wpisz `parametry` i kliknij Run jeszcze raz. Po `clear` nic nie trzeba robić, model sam wczyta parametry przy Run.
+
+### Co oddajemy
+
+Sprawozdanie (`docs/ISSPS_LAB6_sekcja2_Filipek_Michalik_Augustowski.pdf` albo `.docx`), model `src/quad_control.slx` i plik z parametrami `src/parametry.m`.
 
 ### Jak czytać schemat (od lewej)
 
@@ -75,6 +80,9 @@ Z modelu BSP z LAB5 (Multirotor DJIF450Rotors w układzie „+”, 6DOF Quaterni
 
 **Co znaczy, że model jest sparametryzowany?**
 W parametrach bloków zamiast liczb są nazwy zmiennych, a wartości przypisuje plik `parametry.m` w workspace. Zmianę parametru robi się w jednym miejscu, bez wchodzenia w bloki.
+
+**Skąd model bierze parametry po otwarciu?**
+Z callbacków modelu (Modeling → Model Settings → Model Properties → Callbacks): *PostLoadFcn* i *InitFcn* uruchamiają `parametry.m`, jeśli w workspace nie ma parametrów LAB6 (zmienna `konfiguracja` różna od `'LAB6'`). Plik jest wskazany pełną ścieżką, więc działa z każdego folderu.
 
 **Jaki układ współrzędnych?**
 NED: x do przodu, y w prawo, z w dół. Dlatego wysokość to h = -Z_e (blok [1;1;-1]), a start z 10 m to `InitialPosition = [0 0 -10]`.
