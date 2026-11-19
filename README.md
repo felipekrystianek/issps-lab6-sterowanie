@@ -9,6 +9,8 @@ Model BSP jest ten sam co w ćwiczeniu 5 (Aerospace Blockset: Multirotor + 6DOF 
 ```
 docs/
   ISSPS_LAB6_sekcja2_...pdf   <- gotowe sprawozdanie
+  ISSPS_LAB6_sekcja2_...docx     to samo sprawozdanie w wersji Word
+  make_docx.py                tworzy wersję Word: python3 make_docx.py <plik.typ> <wynik.docx>
   sprawozdanie_lab6.typ       źródło sprawozdania (Typst)
   wyniki.json                 wskaźniki z symulacji, które wczytuje sprawozdanie
   img/                        wykresy i zrzut modelu
